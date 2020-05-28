@@ -9,11 +9,17 @@ use ZhDan\Model\Result;
 use ZhDan\Tool\HttpQuery;
 use ZhDan\Cache\FileStore;
 use ZhDan\Facade\CacheAction;
+
+/**
+ * 模拟登录
+ * Class Login
+ * @package ZhDan
+ */
 class Login implements LoginAction
 {
-    private $username;
-    private $password;
-    private $cache;
+    private $username;#用户名
+    private $password;#密码
+    private $cache;#缓存引擎
     public function __construct(string $username,string $password)
     {
         $this->username = $username;
@@ -22,14 +28,20 @@ class Login implements LoginAction
         $this->cache = new FileStore($dir);
     }
 
+    /**
+     * 设置缓存引擎
+     * @param $obj
+     * @throws \Exception
+     */
     public function setCache($obj){
         if (!$obj instanceof CacheAction) throw new \Exception("cache设置错误");
         $this->cache = $obj;
     }
 
-    private function store($data){
-        return $this->cache->put($this->username,$data);
-    }
+    /**
+     * 模拟登录
+     * @return Result
+     */
     public function run(){
         $client = new Client();
         $url = HttpQuery::getPathUri("login");
@@ -53,7 +65,7 @@ class Login implements LoginAction
             $cookie[$index] = explode(";",$item);
             $cookie[$index] = $cookie[$index][0];
         }
-        if (!$this->store($cookie)) return new Result(false,"缓存设置失败",null,false);
+        if (!$this->cache->put($this->username,$cookie)) return new Result(false,"缓存设置失败",null,false);
         return new Result(true,"获取成功",$cookie,false);
     }
 }
