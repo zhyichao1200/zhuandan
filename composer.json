@@ -10,7 +10,8 @@
     "minimum-stability": "dev",
     "require": {
         "php": ">=7.0.1",
-        "guzzlehttp/guzzle": "~6.0"
+        "guzzlehttp/guzzle": "~6.0",
+        "jaeger/querylist": "dev-master"
     },
     "autoload": {
         "psr-4": {
